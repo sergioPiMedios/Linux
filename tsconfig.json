@@ -1,0 +1,37 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "target": "es6",
+        "module": "commonjs",
+        "strict": true,
+        "sourceMap": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "experimentalDecorators": true,
+        "resolveJsonModule": true,
+        "moduleResolution": "Node",
+        "outDir": "./dist/src",
+        "baseUrl": "./src",
+        "paths": {
+            "@fnd/*": [
+                "frameworks_and_drivers/*"
+            ],
+            "@common/*": [
+                "domain/modules/common/*"
+            ],
+            "@custom_surveys/*": [
+                "domain/modules/custom_surveys_svc/*"
+            ]
+        }
+    },
+    "include": [
+        "typings.d.ts",
+        "src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "test"
+    ]
+}
+
+

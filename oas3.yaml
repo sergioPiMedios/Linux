@@ -1,0 +1,257 @@
+openapi: 3.0.0
+info:
+  title: paiqe
+  description: My cool TypeScript app
+  version: 1.0.0
+servers:
+  - url: http://localhost:6500/v1
+tags:
+  - name: Institutions
+    description: Institutions endpoints
+paths:
+  /institutions/train:
+    post:
+      tags:
+        - Institutions
+      summary: Entrenar red
+      description: http://localhost:6500/v1/institutions/train
+      operationId: institutions:train
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                # 'file' will be the field name in this multipart request
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: result.items = [institutions-schema]
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/list_response"       
+  /institutions/predict:
+    get:
+      tags:
+        - Institutions
+      summary: Probar pesos
+      description: http://localhost:6500/v1/institutions/predict
+      operationId: institutions:predict
+      parameters:
+        - in: query
+          name: concesion
+          required: true
+          schema:
+            type: number
+            example: 1
+          type: number
+          example: 0
+        - in: query
+          name: realiza_seleccion
+          required: true
+          schema:
+            type: number
+            example: 1
+        - in: query
+          name: estudiantes_por_computador
+          required: true
+          schema:
+            type: number
+            example: 1
+        - in: query
+          name: intensidad_horaria_semanal
+          required: true
+          schema:
+            type: number
+            example: 1
+        - in: query
+          name: estudiantes_por_laboratorio
+          required: true
+          schema:
+            type: number
+            example: 0.97
+        - in: query
+          name: densidad_en_aula
+          required: true
+          schema:
+            type: number
+            example: 0.98
+      responses:
+        "200":
+          description: institutions-schema
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/api_response"       
+        "404":
+          description: Not found scope with provided id
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/404_not_found"              
+  /institutions/create-survey:
+    post:
+      tags:
+        - Institutions
+      summary: Create a Institutions
+      description: http://localhost:6500/v1/institutions/create-survey
+      operationId: institutions:create-survey      
+      responses:
+        "200":
+          description: institutions-schema
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/responses/response"              
+  /institutions/create-report:
+    get:
+      tags:
+        - Institutions
+      summary: Get report from Institutions
+      description: http://localhost:6500/v1/institutions/create-report
+      operationId: institutions:create-report
+      parameters:
+        - in: query
+          name: start
+          required: false
+          schema:
+            type: number
+            example: 1613663054743
+        - in: query
+          name: end
+          required: false
+          schema:
+            type: number
+            example: 1613663095638
+        - in: query
+          name: ticket_id
+          required: false
+          schema:
+            type: number
+            example: 20
+        - name: export_type
+          in: query
+          required: false
+          schema:
+            type: string
+            default: csv
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/filters-surveys"
+        required: true
+      responses:
+        "200":
+          description: Return the list with objects that match with query
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/api_list_reponse"
+components:
+  schemas:
+    #Institutions
+    institutions-schema:
+      title: institutions-schema
+      type: object
+      properties:
+        type:
+          type: string
+          example: survey
+        id:
+          type: string
+          example: d08ddc3a-67c8-11eb-9bda-ad616485adf7'
+        attributes:
+          type: array
+          items:
+            type: object
+            properties:
+              label:
+                type: string
+              vallue:
+                type: number
+        created_at:
+          type: string
+          example: '2021-02-05T15:42:55.501Z'
+        updated_at:
+          type: string
+          example: '2021-02-10T14:29:54.000Z'
+    filters-surveys:
+      title: filters-surveys
+      type: object
+      properties:
+        initDate:
+          type: string
+          example: '2021-02-15T20:46:04.874Z'
+        endDate: 
+          type: string
+          example: '2021-02-15T20:46:56.597Z'
+    #RESPONSES
+    api_response:
+      title: ApiResponse
+      required:
+        - result
+        - status
+      type: object
+      properties:
+        result:
+          type: object
+          description: Object according to the requested resource
+        status:
+          type: integer
+          description: HTTP code status
+    api_error:
+      title: ApiError
+      required:
+        - message
+        - code
+      type: object
+      properties:
+        message:
+          type: string
+          description: Message that describes the error
+        code:
+          type: integer
+          description: Code of error
+        metadata:
+          type: object
+          description: More info of error
+    list_reponse:
+      title: ListResponse
+      required:
+        - items
+        - total
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            type: object
+          description: response elements according to the resource
+        total:
+          type: integer
+          description: total of items saved
+    api_list_reponse:
+      title: ApiListResponse
+      required:
+        - result
+        - status
+      type: object
+      properties:
+        result:
+          $ref: "#/components/schemas/list_reponse"
+        status:
+          type: integer
+          description: HTTP code status
+  responses:
+    response:
+      $ref: "#/components/schemas/api_response"
+    list_response:
+      $ref: "#/components/schemas/api_list_reponse"
+    error:
+      $ref: "#/components/schemas/api_error"
+    404_not_found:
+      $ref: "#/components/schemas/api_error"

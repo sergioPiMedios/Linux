@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  paiqe:
+    container_name: paiqe
+    image: service/paiqe
+    build: .
+    environment:
+      APP_ID : paiqe
+      PORT : 6500
+      LOG_LEVEL : debug
+      REQUEST_LIMIT : 100kb
+      SESSION_SECRET : mySecret
+      OPENAPI_FILE_PATH : ./oas3.yaml
+      OPENAPI_SPEC : /api/v1/spec
+      OPENAPI_ENABLE_RESPONSE_VALIDATION : "false"
+      OPENAPI_ENABLE_REQUEST_VALIDATION : "true"
+    ports:
+      - 8000:6500
+
